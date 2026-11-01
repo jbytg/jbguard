@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JB Guard · Security Toolkit</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2048%2054'%3E%3Cdefs%3E%3ClinearGradient%20id='g'%20x1='0'%20y1='0'%20x2='1'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%232dd4bf'/%3E%3Cstop%20offset='.55'%20stop-color='%230ea5e9'/%3E%3Cstop%20offset='1'%20stop-color='%234f46e5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath%20d='M24%202%206%208.5v15.2c0%2012.6%207.6%2022.3%2018%2027.3%2010.4-5%2018-14.7%2018-27.3V8.5L24%202z'%20fill='url(%23g)'/%3E%3Cg%20fill='none'%20stroke='white'%20stroke-width='3.2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M20.4%2018.2v9.6a4.3%204.3%200%200%201-4.3%204.3c-.9%200-1.7-.2-2.4-.6'/%3E%3Cpath%20d='M25.4%2018.2v13.9M25.4%2018.2h4.2a3.4%203.4%200%200%201%200%206.8h-4.2m0%200h5a3.6%203.6%200%200%201%200%207.2h-5'/%3E%3C/g%3E%3C/svg%3E">
+<style>
+:root{--bg:#f3f6fb;--surface:rgba(255,255,255,.86);--ink:#0f1b33;--muted:#5b6980;--line:#dbe3ee;--accent:#0f766e;--accent-ink:#fff;--accent-soft:#e0f4f1;--bad:#b42318;--bad-bg:#fdeceb;--good:#067647;--good-bg:#e6f6ee;--warn:#93370d;--warn-bg:#fdf1de;--shadow:0 1px 2px rgba(15,27,51,.05),0 6px 18px rgba(15,27,51,.06)}
+@media (prefers-color-scheme:dark){:root{--bg:#0a1120;--surface:rgba(18,28,50,.8);--ink:#e6ecf7;--muted:#97a6c0;--line:#22304d;--accent:#2dd4bf;--accent-ink:#06201d;--accent-soft:#12303a;--bad:#ff9a8c;--bad-bg:#3a1a1d;--good:#5eead4;--good-bg:#0f2f2c;--warn:#fbbf77;--warn-bg:#35280f;--shadow:none}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:0 18px}
+.top{background:linear-gradient(135deg,#0a1b33 0%,#0f3a5f 60%,#0f5f66 100%);color:#fff;padding:20px 0 26px}
+.brand{display:inline-flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:700;letter-spacing:.01em}
+.top h1{font-size:clamp(1.7rem,5vw,2.4rem);line-height:1.12;margin:18px 0 8px;letter-spacing:-.025em}
+.top .lead{margin:0;color:#c5d3e6;max-width:56ch}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.pills span{font-size:.82rem;font-weight:600;padding:4px 11px;border-radius:99px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18)}
+body.in-tool .top{padding:14px 0}
+body.in-tool .top h1,body.in-tool .top .lead,body.in-tool .pills{display:none}
+main{padding-top:22px;padding-bottom:44px}
+.grp{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:26px 0 10px;font-weight:700}
+.grp:first-child{margin-top:4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.card{display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--surface);border:1px solid var(--line);border-radius:14px;text-decoration:none;color:inherit;box-shadow:var(--shadow);transition:transform .15s,border-color .15s}
+.card:hover{transform:translateY(-2px);border-color:var(--accent)}
+.ico{flex:none;width:46px;height:46px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.ct{display:flex;flex-direction:column;gap:2px}
+.ct b{font-size:1.02rem}
+.ct small{color:var(--muted);font-size:.9rem;line-height:1.4}
+.ct em{font-style:normal;font-size:.76rem;font-weight:700;color:var(--accent);margin-top:6px;text-transform:uppercase;letter-spacing:.05em}
+.back{display:inline-flex;align-items:center;min-height:44px;margin:-4px 0 6px;color:var(--accent);font-weight:700;text-decoration:none}
+.back:hover{text-decoration:underline}
+section{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:var(--shadow)}
+[hidden]{display:none!important}
+h2{font-size:1.3rem;margin:0 0 6px;letter-spacing:-.01em}
+.d{color:var(--muted);margin:0 0 16px;font-size:.96rem}
+label{display:block;font-weight:600;margin:14px 0 6px;font-size:.95rem}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+input[type=text],input[type=password],input[type=email],textarea{flex:1 1 220px;min-width:0;width:100%;min-height:46px;padding:12px 14px;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px}
+.row input{width:auto}
+textarea{min-height:100px;resize:vertical}
+input[type=file]{width:100%;padding:10px;background:var(--bg);border:1.5px dashed var(--line);border-radius:10px;color:var(--muted)}
+input[type=range],input[type=checkbox]{accent-color:var(--accent)}
+button{min-height:46px;padding:11px 20px;font:inherit;font-weight:700;border:0;border-radius:10px;background:var(--accent);color:var(--accent-ink);cursor:pointer;transition:filter .15s}
+button:hover{filter:brightness(1.07)}
+button.t{background:transparent;color:var(--ink);border:1.5px solid var(--line);font-weight:600}
+button:disabled{opacity:.5;cursor:wait}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+input:focus,textarea:focus{border-color:var(--accent)}
+.out{margin-top:16px}
+.res{padding:14px 16px;border-radius:12px;border:1px solid var(--line);border-left:5px solid var(--line);background:var(--bg);font-weight:700}
+.res.bad{border-color:var(--bad);background:var(--bad-bg)}.res.good{border-color:var(--good);background:var(--good-bg)}.res.warn{border-color:var(--warn);background:var(--warn-bg)}
+.res p,.res ul{font-weight:400;color:var(--muted);margin:6px 0 0}
+.res ul{padding-left:20px}
+code{white-space:pre-wrap;display:block;word-break:break-all;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin:6px 0 10px;font:.92rem ui-monospace,Menlo,Consolas,monospace;color:var(--ink);font-weight:400}
+.bar{height:8px;border-radius:5px;background:var(--line);overflow:hidden;margin-top:12px}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s,background .25s}
+.opt{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0}
+.opt label{display:flex;align-items:center;gap:7px;margin:0;font-weight:500}
+.chk label{display:flex;gap:12px;align-items:flex-start;margin:0;padding:12px 0;border-top:1px solid var(--line);font-weight:400}
+.chk label:first-of-type{border-top:0}
+.chk input{width:20px;height:20px;margin-top:2px;flex:none}
+.foot{margin-top:26px;color:var(--muted);font-size:.86rem;text-align:center}
+a.go{display:inline-flex;align-items:center;min-height:44px;padding:9px 16px;border-radius:10px;background:var(--accent);color:var(--accent-ink);font-weight:700;text-decoration:none;margin:6px 8px 0 0}
+
+@keyframes rise{from{opacity:0;transform:translateY(12px)}}
+@keyframes flow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes float{50%{transform:translateY(-2px) scale(1.07)}}
+@keyframes rip{to{transform:scale(1);opacity:0}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(20,184,166,.45)}100%{box-shadow:0 0 0 22px rgba(20,184,166,0)}}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+@keyframes blink{50%{opacity:.25}}
+@keyframes slide{0%{transform:translateX(-110%)}100%{transform:translateX(280%)}}
+@keyframes toastin{from{opacity:0;transform:translate(-50%,16px)}}
+.top{background-size:220% 220%;animation:flow 16s ease-in-out infinite}
+
+section.enter{animation:rise .4s cubic-bezier(.2,.7,.2,1) backwards}
+.card:active{transform:scale(.98)}
+.card .ico{transition:transform .25s cubic-bezier(.3,1.5,.5,1),background .2s}
+.card:hover .ico{transform:scale(1.1) rotate(-5deg)}
+.res{animation:rise .35s cubic-bezier(.2,.7,.2,1) backwards}
+#o18 .res,#o7 .res{animation:none}
+button,a.go{position:relative;overflow:hidden}
+button:active{transform:scale(.97)}
+.rip{position:absolute;border-radius:50%;background:rgba(255,255,255,.4);transform:scale(0);animation:rip .6s ease-out;pointer-events:none}
+button.t .rip{background:var(--accent-soft)}
+code{user-select:all;-webkit-user-select:all;cursor:copy}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#0a1b33;color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;font-size:.94rem;box-shadow:0 10px 30px rgba(0,0,0,.3);z-index:50;max-width:calc(100vw - 32px);text-align:center;animation:toastin .3s cubic-bezier(.2,.7,.2,1);transition:opacity .3s}
+.toast.out{opacity:0}
+.vault{display:flex;gap:16px;align-items:center;margin-bottom:8px}
+.vault h2{margin:0 0 4px}.vault .d{margin:0}
+.lock{flex:none;width:68px;height:68px;color:var(--accent);border-radius:50%;display:grid;place-items:center;background:var(--accent-soft)}
+.lock svg{width:46px;height:46px;overflow:visible}
+.shackle{transform-origin:42px 30px;transition:transform .6s cubic-bezier(.3,1.5,.5,1)}
+.lock.open .shackle{transform:translateY(-7px) rotate(-24deg)}
+.lock.shake{animation:shake .45s}
+#s-enc.busy .lock{animation:pulse 1.1s ease-out infinite}
+.status{display:flex;align-items:center;gap:9px;margin-top:14px;font-size:.92rem;color:var(--muted);font-weight:600}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--muted);transition:background .3s}
+#s-enc.busy .dot{background:var(--warn);animation:blink .9s infinite}
+#s-enc.ok .dot{background:var(--good)}
+#s-enc.err .dot{background:var(--bad)}
+.progress{height:4px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:10px;opacity:0;transition:opacity .25s}
+.progress i{display:block;height:100%;width:38%;border-radius:3px;background:var(--accent)}
+#s-enc.busy .progress{opacity:1}
+#s-enc.busy .progress i{animation:slide 1s ease-in-out infinite}
+
+
+#prog{position:fixed;top:0;left:0;height:3px;width:100%;transform-origin:0 50%;transform:scaleX(var(--p,0));background:linear-gradient(90deg,#2dd4bf,#38bdf8,#818cf8);z-index:60;pointer-events:none}
+.card,section{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.top .wrap>h1,.top .wrap>.lead,.top .wrap>.pills{transform:translateY(calc(var(--sy,0)*.28px));opacity:calc(1 - var(--sy,0)/300)}
+
+.rv{opacity:0;transform:translateY(28px)}
+.rv.in{opacity:1;transform:none}
+.card.rv,.grp.rv{transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+.card.in:hover{transform:translateY(-2px)}
+
+#bg{position:fixed;inset:0;z-index:1;pointer-events:none}
+.top{position:relative;z-index:0}
+main{position:relative;z-index:2}
+.top .wrap{position:relative;z-index:1}
+.brand{gap:13px}
+.brand .bn{display:flex;flex-direction:column;line-height:1}
+.brand .bn b{font-size:1.32rem;font-weight:800;letter-spacing:.04em;line-height:1}
+.brand .bn b span{font-weight:500;font-size:.8em;letter-spacing:.24em;margin-left:.5em;color:#bdeee6}
+.brand .bn small{font-size:.62rem;font-weight:700;color:#7fd9cc;letter-spacing:.3em;text-transform:uppercase;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.2)}
+.logo{filter:drop-shadow(0 6px 14px rgba(14,165,233,.5))}
+.shine{transform-box:fill-box;animation:shine 6.5s ease-in-out infinite}
+@keyframes shine{0%,58%{transform:translateX(-300%) skewX(-20deg)}100%{transform:translateX(520%) skewX(-20deg)}}
+.card{position:relative;overflow:hidden}
+.card>*{position:relative}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(240px circle at var(--cx,50%) var(--cy,50%),rgba(20,184,166,.16),transparent 65%);opacity:0;transition:opacity .25s;pointer-events:none}
+.card:hover::before{opacity:1}
+@media (max-width:520px){section{padding:18px}.row button{flex:1 1 auto}.wrap{padding:0 14px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="prog" aria-hidden="true"></div>
+<header class="top"><div class="wrap">
+<a class="brand" href="#" aria-label="JB Guard home"><svg class="logo" viewBox="0 0 48 54" width="40" height="45" aria-hidden="true"><defs><linearGradient id="jbg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2dd4bf"/><stop offset=".55" stop-color="#0ea5e9"/><stop offset="1" stop-color="#4f46e5"/></linearGradient><linearGradient id="jbs" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient><clipPath id="jbclip"><path d="M24 2 6 8.5v15.2c0 12.6 7.6 22.3 18 27.3 10.4-5 18-14.7 18-27.3V8.5L24 2z"/></clipPath></defs><path d="M24 2 6 8.5v15.2c0 12.6 7.6 22.3 18 27.3 10.4-5 18-14.7 18-27.3V8.5L24 2z" fill="url(#jbg)"/><path d="M24 2 6 8.5v15.2c0 12.6 7.6 22.3 18 27.3V2z" fill="#fff" fill-opacity=".14"/><path d="M24 5.8 9.2 11.2v12.5c0 10.2 6.1 18.4 14.8 22.9 8.7-4.5 14.8-12.7 14.8-22.9V11.2L24 5.8z" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.1"/><g fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 18.2v9.6a4.3 4.3 0 0 1-4.3 4.3c-.9 0-1.7-.2-2.4-.6"/><path d="M25.4 18.2v13.9M25.4 18.2h4.2a3.4 3.4 0 0 1 0 6.8h-4.2m0 0h5a3.6 3.6 0 0 1 0 7.2h-5"/></g><g clip-path="url(#jbclip)"><rect class="shine" x="-10" y="0" width="14" height="54" fill="url(#jbs)"/></g><path d="M24 2 6 8.5v15.2c0 12.6 7.6 22.3 18 27.3 10.4-5 18-14.7 18-27.3V8.5L24 2z" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="1.2"/></svg><span class="bn"><b>JB<span>GUARD</span></b><small>Security Toolkit</small></span></a>
+<h1>Stay safe online</h1>
+<p class="lead">Free tools from JB Guard to check for leaks, build stronger passwords and spot scams. Everything runs in your browser.</p>
+<div class="pills"><span>Private</span><span>No sign-up</span><span>Free</span></div>
+</div></header>
+<main class="wrap">
+<div id="home"></div>
+<div id="view" hidden><a class="back" href="#">← All tools</a><div id="panels"></div></div>
+<p class="foot">Only tools marked “Uses internet” contact outside services, and none of them send your password. Results are guidance, not guarantees.</p>
+</main>
+<script>
+const $=(s,r=document)=>r.querySelector(s);
+function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
+function res(kind,title,lines,list){const b=el("div","res "+kind);b.append(title);if(lines)lines.forEach(l=>b.append(el("p","",l)));if(list){const u=el("ul");list.forEach(t=>u.append(el("li","",t)));b.append(u)}return b}
+function lnk(t,u){const a=el("a","go",t);a.href=u;a.target="_blank";a.rel="noopener noreferrer";return a}
+const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");
+async function digest(alg,s){if(!(window.crypto&&crypto.subtle))throw new Error("This browser can’t hash here. Use a current browser and open the file from your computer.");return hex(await crypto.subtle.digest(alg,new TextEncoder().encode(s)))}
+function rnd(n){const a=new Uint32Array(1),lim=Math.floor(4294967296/n)*n;do{crypto.getRandomValues(a)}while(a[0]>=lim);return a[0]%n}
+function pwField(id){return '<div class="row"><input id="'+id+'" type="password" autocomplete="off" spellcheck="false" autocapitalize="off"><button type="button" class="t" data-show="'+id+'">Show</button></div>'}
+
+async function copyText(t){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t);return true}}catch(e){}
+ try{const a=document.createElement("textarea");a.value=t;a.setAttribute("readonly","");a.style.cssText="position:fixed;top:0;left:0;opacity:0";document.body.appendChild(a);a.focus();a.select();a.setSelectionRange(0,t.length);const ok=document.execCommand("copy");a.remove();return ok}catch(e){return false}}
+function toast(m){document.querySelectorAll(".toast").forEach(x=>x.remove());const t=el("div","toast",m);t.setAttribute("role","status");document.body.append(t);setTimeout(()=>t.classList.add("out"),2200);setTimeout(()=>t.remove(),2600)}
+function scramble(node,target,ms){cancelAnimationFrame(node._raf);if(!target||target.length>4000||matchMedia("(prefers-reduced-motion:reduce)").matches){node.textContent=target;return}
+ const G="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghkmnpqrstuvwxyz0123456789+/=#$%&@",L=target.length,t0=performance.now(),dur=Math.min(ms||1100,450+L*6);
+ const f=now=>{const p=Math.min(1,(now-t0)/dur),r=Math.floor(p*L);let o="";for(let i=0;i<L;i++){const c=target[i];o+=(i<r||c===" "||c==="\n")?c:G[Math.floor(Math.random()*G.length)]}node.textContent=o;if(p<1)node._raf=requestAnimationFrame(f);else node.textContent=target};f(t0)}
+document.addEventListener("pointerdown",e=>{const b=e.target.closest("button,a.go");if(!b||b.disabled)return;const r=b.getBoundingClientRect(),d=Math.max(r.width,r.height)*2,s=document.createElement("span");s.className="rip";s.style.cssText="width:"+d+"px;height:"+d+"px;left:"+(e.clientX-r.left-d/2)+"px;top:"+(e.clientY-r.top-d/2)+"px";b.appendChild(s);s.addEventListener("animationend",()=>s.remove())});
+const tools=[
+{id:"leak",html:()=>'<h2>Has this password been leaked?</h2><p class="d">Checks over a billion breached passwords. Your browser sends only the first 5 characters of the password’s hash to Have I Been Pwned’s free service, never the password.</p><label for="p1">Password</label>'+pwField("p1")+'<p><button id="b1">Check</button></p><div class="out" id="o1" aria-live="polite"></div>',
+ init(){$("#b1").onclick=async()=>{const pw=$("#p1").value,o=$("#o1");if(!pw){o.replaceChildren(res("warn","Enter a password first."));return}const b=$("#b1");b.disabled=true;b.textContent="Checking…";
+  try{const h=(await digest("SHA-1",pw)).toUpperCase(),pre=h.slice(0,5),suf=h.slice(5);let r;try{r=await fetch("https://api.pwnedpasswords.com/range/"+pre)}catch(e){throw new Error("Could not reach the service. Check your internet connection.")}
+   if(!r.ok)throw new Error("The service returned an error ("+r.status+").");let n=0;for(const l of (await r.text()).split("\n")){const [s,c]=l.trim().split(":");if(s===suf){n=parseInt(c,10)||0;break}}
+   o.replaceChildren(n>0?res("bad","Found "+n.toLocaleString()+" times in data breaches.",["Stop using it."],["Change it everywhere it is used.","Use a unique password per site.","Turn on two-factor authentication."]):res("good","Not found in known breaches.",["That doesn’t prove it is strong. Check its strength in the Password strength tool."]))}
+  catch(e){o.replaceChildren(res("warn",e.message))}b.disabled=false;b.textContent="Check"}}},
+{id:"email",html:()=>'<h2>Was my email in a breach?</h2><p class="d">Asks LeakCheck’s free public service which breaches list your email. Check only addresses you own. If your browser blocks the request, use the buttons to search the sites by hand.</p><label for="e1">Email</label><input id="e1" type="email" autocomplete="email" placeholder="you@example.com"><p><button id="b2">Check email</button></p><div class="out" id="o2" aria-live="polite"></div>',
+ init(){const sites=[["Have I Been Pwned","https://haveibeenpwned.com/"],["BreachDirectory","https://breachdirectory.org/"],["Intelligence X","https://intelx.io/"]];
+  const manual=e=>{const d=el("div");d.append(el("p","d","Search by hand. Your email is copied when you tap a button."));sites.forEach(([n,u])=>{const a=lnk("Open "+n,u);a.onclick=()=>{copyText(e).then(ok=>toast(ok?"Email copied. Paste it on the site.":"Couldn’t copy. Type it on the site."))};d.append(a)});return d};
+  $("#b2").onclick=async()=>{const e=$("#e1").value.trim(),o=$("#o2");if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e)){o.replaceChildren(res("warn","Enter a valid email address."));return}const b=$("#b2");b.disabled=true;b.textContent="Checking…";
+  try{const r=await fetch("https://leakcheck.io/api/public?check="+encodeURIComponent(e));if(!r.ok)throw 0;const d=await r.json();if(!d.success)throw 0;const src=d.sources||[],n=d.found||src.length;
+   if(!n)o.replaceChildren(res("good","No leaks found on LeakCheck.",["Also try the other sites below."]),manual(e));
+   else o.replaceChildren(res("bad","Found in "+n+" leak(s).",["Exposed data types: "+((d.fields||[]).join(", ")||"not listed")+"."],src.slice(0,30).map(s=>(s.name||s)+(s.date?" ("+s.date+")":""))),manual(e))}
+  catch(x){o.replaceChildren(res("warn","The automatic check didn’t work from this browser.",["Use the buttons below instead."]),manual(e))}b.disabled=false;b.textContent="Check email"}}},
+{id:"crack",html:()=>'<h2>How strong is this password?</h2><p class="d">Rates your password and estimates how long an attacker would need to guess it in four situations. These are rough averages. Runs only in your browser.</p><label for="p3">Password</label>'+pwField("p3")+'<div class="bar"><i id="cbar"></i></div><div class="out" id="o18" aria-live="polite"></div>',
+ init(){const common=["password","123456","qwerty","abc123","letmein","iloveyou","admin","welcome","monkey","dragon","football","111111","123123","passw0rd","master","sunshine","princess","login","starwars","hello","freedom","whatever","trustno1","batman","superman","qazwsx","1q2w3e","michael","jordan","shadow","baseball","secret"];
+  const dur=sec=>{const pl=(n,w)=>n+" "+w+(n===1?"":"s");if(sec<1)return "instantly";if(sec<60)return pl(Math.round(sec),"second");if(sec<3600)return pl(Math.round(sec/60),"minute");if(sec<86400)return pl(Math.round(sec/3600),"hour");if(sec<31536000)return pl(Math.round(sec/86400),"day");const y=sec/31536000;if(y<1000)return pl(Math.round(y),"year");if(y<1e6)return pl(Math.round(y/1e3),"thousand")+" years";if(y<1e9)return pl(Math.round(y/1e6),"million")+" years";if(y<1e12)return pl(Math.round(y/1e9),"billion")+" years";return "over a trillion years"};
+  const sc=[["Website login with guess limits (10 guesses a second)",10],["Stolen database, slow protection (100 thousand a second)",1e5],["Stolen database, weak protection, one gaming PC (100 billion a second)",1e11],["Stolen database, weak protection, large GPU cluster (10 trillion a second)",1e13]];
+  $("#p3").oninput=()=>{const p=$("#p3").value,o=$("#o18");if(!p){o.replaceChildren();$("#cbar").style.width="0";return}
+   let pool=0;if(/[a-z]/.test(p))pool+=26;if(/[A-Z]/.test(p))pool+=26;if(/\d/.test(p))pool+=10;if(/[^A-Za-z0-9]/.test(p))pool+=32;let bits=p.length*Math.log2(pool||1);const notes=[];
+   const core=p.toLowerCase().replace(/[^a-z0-9@$!#%^&*]/g,"").replace(/[\d!@#$%^&*]+$/,""),leet=core.replace(/@/g,"a").replace(/\$/g,"s").replace(/!/g,"i").replace(/0/g,"o").replace(/3/g,"e").replace(/4/g,"a").replace(/1/g,"l");
+   if(common.some(c=>core.includes(c)||leet.includes(c))){bits=Math.min(bits,13);notes.push("It contains a very common password, so attackers try it first.")}
+   else if(/^[A-Za-z][a-z]+\d{1,4}[^A-Za-z0-9]?$/.test(p)&&p.length<=12){bits=Math.min(bits,30);notes.push("A word followed by numbers is a pattern attackers try early.")}
+   if(/(.)\1{2,}/.test(p)||/(0123|1234|2345|abcd|qwer|asdf)/i.test(p)){bits*=.7;notes.push("Repeated or sequential characters make it easier to guess.")}
+   const g=Math.pow(2,bits)/2,t=sc.map(x=>g/x[1]),w=t[2],kind=w<86400?"bad":w<31536000*10?"warn":"good";
+   const cb=$("#cbar");cb.style.width=Math.min(100,Math.max(5,bits/90*100))+"%";cb.style.background=kind==="bad"?"var(--bad)":kind==="warn"?"var(--warn)":"var(--good)";
+   const tips=notes.slice();if(p.length<14)tips.push("Aim for 14 or more characters. Each extra random character multiplies the time by about "+Math.round(pool||1)+".");tips.push("Never reuse it. A leaked password is cracked instantly no matter how strong it looks, so also run it through the Password leak check.");
+   o.replaceChildren(res(kind,w<1?"Cracked instantly if a site stores it poorly":(w>3.1536e19?"More than a trillion years":"About "+dur(w))+" if a site stores it poorly",["Average time to guess it:"],sc.map((x,i)=>x[0]+": "+dur(t[i]))),Object.assign(res("warn","Notes",null,tips),{style:"margin-top:10px"}))}}},
+{id:"gen",html:()=>'<h2>Password generator</h2><p class="d">Creates random passwords using your browser’s secure random generator.</p><label for="len">Length: <span id="lv">20</span></label><input id="len" type="range" min="8" max="64" value="20" style="width:100%"><div class="opt"><label><input type="checkbox" id="gu" checked> A–Z</label><label><input type="checkbox" id="gl" checked> a–z</label><label><input type="checkbox" id="gd" checked> 0–9</label><label><input type="checkbox" id="gs" checked> Symbols</label></div><p class="row"><button id="b4">Generate</button><button class="t" id="b4c">Copy</button></p><code id="o4"></code>',
+ init(){let last="";const gen=()=>{let s="";if($("#gu").checked)s+="ABCDEFGHIJKLMNOPQRSTUVWXYZ";if($("#gl").checked)s+="abcdefghijklmnopqrstuvwxyz";if($("#gd").checked)s+="0123456789";if($("#gs").checked)s+="!@#$%^&*()-_=+[]{};:,.?";if(!s){last="";$("#o4").textContent="Pick at least one character type.";return}let o="";for(let i=0;i<+$("#len").value;i++)o+=s[rnd(s.length)];last=o;scramble($("#o4"),o,650)};
+  $("#len").oninput=()=>{$("#lv").textContent=$("#len").value;gen()};$("#b4").onclick=gen;[...document.querySelectorAll("#gu,#gl,#gd,#gs")].forEach(c=>c.onchange=gen);$("#b4c").onclick=async()=>{const ok=last&&await copyText(last);$("#b4c").textContent=ok?"Copied ✓":"Copy failed";toast(ok?"Password copied to clipboard":"Couldn’t copy automatically. Tap the password to select it.");setTimeout(()=>$("#b4c").textContent="Copy",1600)};gen()}},
+{id:"link",html:()=>'<h2>Link and website check</h2><p class="d">Checks a link for phishing warning signs without opening it, then asks Cloudflare’s security DNS whether the site is a known threat. A quick check, not a verdict.</p><label for="u1">Link</label><input id="u1" type="text" placeholder="https://example.com/login" autocomplete="off" spellcheck="false"><p><button id="b6">Analyze</button></p><div class="out" id="o6" aria-live="polite"></div>',
+ init(){const sh=["bit.ly","tinyurl.com","t.co","goo.gl","ow.ly","is.gd","buff.ly","cutt.ly","rebrand.ly"],tld=["zip","mov","xyz","top","tk","ml","ga","cf","gq","click","country","icu","work"],kw=/(login|verify|secure|account|update|wallet|bank|paypal|signin|confirm|support|password)/i;
+  $("#b6").onclick=()=>{const raw=$("#u1").value.trim(),o=$("#o6");if(!raw){o.replaceChildren(res("warn","Paste a link first."));return}let u;try{u=new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(raw)?raw:"http://"+raw)}catch(e){o.replaceChildren(res("warn","That doesn’t look like a valid link."));return}
+   const h=u.hostname.toLowerCase(),f=[];let s=0;const add=(t,w)=>{f.push(t);s+=w},isIp=/^\d{1,3}(\.\d{1,3}){3}$/.test(h)||h.startsWith("[");
+   if(u.protocol==="http:")add("Not encrypted (http, not https).",1);if(isIp)add("Uses a raw IP address instead of a site name.",2);if(h.includes("xn--"))add("Uses punycode, which can imitate look-alike letters.",2);
+   if(u.username||raw.includes("@"))add("Contains an @ sign, which can hide the real destination.",2);if(h.split(".").length>4)add("Has many subdomains, a common disguise trick.",1);if(sh.includes(h))add("A link shortener hides the real destination.",1);
+   if(tld.includes(h.split(".").pop()))add("Uses an extension often seen in scam sites (."+h.split(".").pop()+").",1);if(kw.test(h)&&(h.match(/-/g)||[]).length>=1)add("The site name mixes sensitive words and hyphens.",2);else if(kw.test(h))add("The site name contains a sensitive word like “login” or “bank”.",1);
+   if(raw.length>100)add("Unusually long link.",1);if(/[^\x00-\x7F]/.test(raw))add("Contains non-standard characters.",1);
+   const lv=s>=4?["High risk","bad"]:s>=2?["Suspicious","warn"]:["No obvious warning signs","good"];
+   const box=res(lv[1],lv[0]+" for "+h,["Don’t enter passwords or payment details unless you opened the site yourself by typing its address."],f.length?f:["No common red flags found. Scams can still look clean."]);
+   const lk=el("div","out");lk.append(el("p","d","Get a second opinion (these open the link’s address on other sites, not the link itself):"),lnk("VirusTotal","https://www.virustotal.com/gui/search/"+encodeURIComponent(raw)),lnk("Google Safe Browsing","https://transparencyreport.google.com/safe-browsing/search?url="+encodeURIComponent(raw)));
+   o.replaceChildren(box,lk);
+   if(!isIp){const th=Object.assign(res("good","Checking known-threat lists…"),{style:"margin-top:10px"});o.insertBefore(th,lk);
+    const q=async(x,hd)=>{const r=await fetch(x+encodeURIComponent(h)+"&type=A",hd?{headers:{accept:"application/dns-json"}}:{});if(!r.ok)throw 0;return r.json()};
+    Promise.all([q("https://dns.google/resolve?name="),q("https://security.cloudflare-dns.com/dns-query?name=",1)]).then(([g,c])=>{const real=(g.Answer||[]).some(x=>x.type===1),bl=(c.Answer||[]).some(x=>x.type===1&&x.data==="0.0.0.0")||(real&&c.Status===3);const n=bl?res("bad","Known dangerous site",["Cloudflare’s security DNS blocks it as malware or phishing. Don’t visit it or enter anything there."]):res("good","Not on known threat lists",["That isn’t proof it’s safe. New scam sites take time to be listed."]);n.style.marginTop="10px";th.replaceWith(n)}).catch(()=>{const n=res("warn","Online threat check unavailable",["Check your internet connection. The warning signs above still apply."]);n.style.marginTop="10px";th.replaceWith(n)})}}}},
+{id:"hdr",html:()=>'<h2>Email header check</h2><p class="d">Paste an email’s full headers to spot spoofing (in Gmail: ⋮ menu, then Show original). Runs only in your browser.</p><label for="h1">Headers</label><textarea id="h1" style="min-height:140px"></textarea><p><button id="b12">Analyze</button></p><div class="out" id="o12" aria-live="polite"></div>',
+ init(){$("#b12").onclick=()=>{const raw=$("#h1").value.trim(),o=$("#o12");if(!raw){o.replaceChildren(res("warn","Paste the headers first."));return}
+  const t=raw.replace(/\r?\n[ \t]+/g," "),get=n=>(t.match(new RegExp("^"+n+":[ \\t]*(.*)$","im"))||[])[1]||"",dom=x=>((x.match(/@([A-Za-z0-9.-]+)/)||[])[1]||"").toLowerCase();
+  const st=k=>{const m=[...t.matchAll(new RegExp("\\b"+k+"=(\\w+)","ig"))];return m.length?m[0][1].toLowerCase():null};
+  const W=[],G=[];let bad=false;[["SPF","spf"],["DKIM","dkim"],["DMARC","dmarc"]].forEach(([n,k])=>{const v=st(k);if(!v)W.push(n+": no result found in these headers.");else if(v==="pass")G.push(n+" passed.");else{W.push(n+" result: "+v+".");if(/fail/.test(v))bad=true}});
+  const fd=dom(get("From")),rd=dom(get("Return-Path")),td=dom(get("Reply-To"));
+  if(fd&&rd&&!(fd===rd||fd.endsWith("."+rd)||rd.endsWith("."+fd)))W.push("The sending address ("+rd+") differs from the From domain ("+fd+"). Normal for mailing lists, suspicious otherwise.");
+  if(fd&&td&&fd!==td)W.push("Replies go to a different domain ("+td+") than the sender ("+fd+").");
+  G.push((t.match(/^Received:/gim)||[]).length+" mail server hop(s) recorded.");
+  o.replaceChildren(res(bad?"bad":W.length?"warn":"good",bad?"Likely spoofed or forged":W.length?W.length+" thing(s) to check":"No obvious spoofing signs",["Trust the results added by your own mail provider. A forged email can fake the rest."],W),Object.assign(res("good","Looks fine",null,G),{style:"margin-top:10px"}))}}},
+{id:"enc",html:()=>'<div class="vault"><div class="lock open" id="lk"><svg viewBox="0 0 64 64" aria-hidden="true"><g class="shackle"><path d="M22 30v-10a10 10 0 0 1 20 0v10" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/></g><rect x="13" y="27" width="38" height="28" rx="7" fill="var(--accent-soft)" stroke="currentColor" stroke-width="3"/><circle cx="32" cy="39" r="4" fill="currentColor"/><path d="M32 42v6" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></svg></div><div><h2>Encrypt or decrypt a message</h2><p class="d">Locks a message with a password using AES-256. Only someone with the password can unlock it. A lost password can’t be recovered. Runs only in your browser.</p></div></div><label for="n1">Message or scrambled text</label><textarea id="n1"></textarea><label for="n2">Password</label>'+pwField("n2")+'<p class="row"><button id="b15">Encrypt</button><button class="t" id="b15d">Decrypt</button></p><div class="status"><span class="dot"></span><span id="stt">Ready</span></div><div class="progress"><i></i></div><div class="out" id="o15" aria-live="polite"></div>',
+ init(){const S=$("#s-enc"),lk=$("#lk"),stt=$("#stt"),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  const state=(c,t)=>{S.classList.remove("busy","ok","err");if(c)S.classList.add(c);stt.textContent=t};
+  const lock=m=>{lk.classList.remove("shake");lk.classList.toggle("open",m==="open");if(m==="shake"){void lk.offsetWidth;lk.classList.add("shake")}};
+  const busy=b=>{$("#b15").disabled=b;$("#b15d").disabled=b};
+  const key=async(pw,salt)=>{const m=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveKey"]);return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:250000,hash:"SHA-256"},m,{name:"AES-GCM",length:256},false,["encrypt","decrypt"])};
+  const b64=u=>{let r="";u.forEach(c=>r+=String.fromCharCode(c));return btoa(r)},un=x=>Uint8Array.from(atob(x.replace(/\s/g,"")),c=>c.charCodeAt(0));
+  const warn=t=>$("#o15").replaceChildren(res("warn",t));
+  const show=(t,c)=>{const k=el("code");k.title="Tap to select";const b=el("button","t","Copy");b.type="button";b.style.marginTop="2px";
+   b.onclick=async()=>{const ok=await copyText(t);b.textContent=ok?"Copied ✓":"Copy failed";toast(ok?"Copied to clipboard":"Couldn’t copy automatically. Tap the text to select it, then copy.");setTimeout(()=>b.textContent="Copy",1800)};
+   $("#o15").replaceChildren(res("good",c),k,b);scramble(k,t,1300)};
+  $("#b15").onclick=async()=>{const m=$("#n1").value,pw=$("#n2").value;if(!m||!pw){state("err","Enter a message and a password");warn("Enter a message and a password.");return}
+   busy(true);state("busy","Locking with AES-256…");lock("open");
+   try{const [ct]=await Promise.all([(async()=>{const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12)),c=new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM",iv},await key(pw,salt),new TextEncoder().encode(m))),all=new Uint8Array(28+c.length);all.set(salt);all.set(iv,16);all.set(c,28);return b64(all)})(),sleep(900)]);
+    lock("closed");state("ok","Encrypted and locked");show(ct,"Encrypted. Copy the scrambled text and share it.")}
+   catch(e){lock("closed");state("err","Encryption failed");warn("Encryption isn’t available in this browser. Open the file from your computer in a current browser.")}busy(false)};
+  $("#b15d").onclick=async()=>{const t=$("#n1").value,pw=$("#n2").value;if(!t||!pw){state("err","Paste the text and enter the password");warn("Paste the scrambled text and enter the password.");return}
+   busy(true);state("busy","Unlocking…");lock("closed");
+   try{const [pt]=await Promise.all([(async()=>{const a=un(t);if(a.length<45)throw 0;return new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:a.slice(16,28)},await key(pw,a.slice(0,16)),a.slice(28)))})(),sleep(900)]);
+    lock("open");state("ok","Unlocked");show(pt,"Decrypted.")}
+   catch(e){lock("shake");state("err","Couldn’t unlock");warn("Couldn’t decrypt. The password is wrong, or the text was changed or copied incompletely.")}busy(false)}}},
+{id:"img",html:()=>'<h2>Remove hidden photo details</h2><p class="d">Photos often hide your GPS location, camera and date. This makes a clean copy without them. The photo never leaves your computer.</p><label for="i1">Photo</label><input id="i1" type="file" accept="image/*"><p><button id="b16">Make clean copy</button></p><div class="out" id="o16" aria-live="polite"></div>',
+ init(){$("#b16").onclick=async()=>{const f=$("#i1").files[0],o=$("#o16");if(!f||!/^image\//.test(f.type)){o.replaceChildren(res("warn","Choose a photo first."));return}
+  try{const bm=await createImageBitmap(f),c=document.createElement("canvas");c.width=bm.width;c.height=bm.height;c.getContext("2d").drawImage(bm,0,0);const png=f.type==="image/png",blob=await new Promise(r=>c.toBlob(r,png?"image/png":"image/jpeg",.92)),u=URL.createObjectURL(blob),a=lnk("Download clean photo",u);a.removeAttribute("target");a.download="clean-"+f.name.replace(/\.[^.]+$/,"")+(png?".png":".jpg");const im=el("img");im.src=u;im.alt="Clean copy preview";im.style.cssText="max-width:100%;border-radius:10px;margin-top:10px;display:block";
+   o.replaceChildren(res("good","Done. Location, camera and date details are gone.",["Share the new copy, not the original."]),a,im)}catch(e){o.replaceChildren(res("warn","Couldn’t read that image. Try a JPG or PNG."))}}}},
+{id:"list",html:()=>'<h2>Account security checklist</h2><p class="d">Tick what you have done. Each item blocks a common way accounts get taken over.</p><div class="chk" id="cl"></div><div class="bar"><i id="cb"></i></div><div class="out" id="o7" aria-live="polite"></div>',
+ init(){const items=["Use a password manager and a unique password for each account","Turn on two-factor authentication for email, banking and social accounts","Use an authenticator app or passkey instead of SMS where possible","Secure your main email account first, since it resets everything else","Keep your phone, computer and browser updated","Check your email and passwords for leaks every few months","Don’t click links in unexpected messages. Go to the site directly","Back up important files in a second place","Review which apps and devices are logged in to your accounts","Lock your phone and computer with a strong PIN or password"];
+  const box=$("#cl"),upd=()=>{const n=box.querySelectorAll("input:checked").length,k=n>=8?"good":n>=5?"warn":"bad";$("#cb").style.width=(n/items.length*100)+"%";$("#cb").style.background="var(--"+k+")";$("#o7").replaceChildren(res(k,n+" of "+items.length+" done"))};
+  items.forEach((t,i)=>{const l=el("label"),c=el("input");c.type="checkbox";c.id="c"+i;c.onchange=upd;l.append(c,el("span","",t));box.append(l)});upd()}}
+];
+const meta={
+leak:{t:"Password leak check",d:"Find out if a password has appeared in a data breach.",on:1,i:'<circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 20 3M16 7l3 3M14 9l2 2"/>'},
+email:{t:"Email leak check",d:"See which breaches have exposed your email address.",on:1,i:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>'},
+crack:{t:"Password strength",d:"Rate a password and see how long it would take to hack.",on:0,i:'<path d="M12 3 4 6v6c0 4.5 3.2 8 8 9 4.8-1 8-4.5 8-9V6l-8-3z"/><path d="m9 12 2 2 4-4"/>'},
+gen:{t:"Password generator",d:"Create strong, random passwords in one tap.",on:0,i:'<path d="M20 11a8 8 0 0 0-14-4M4 4v4h4M4 13a8 8 0 0 0 14 4M20 20v-4h-4"/>'},
+link:{t:"Link and website check",d:"Spot phishing signs and known dangerous sites.",on:1,i:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'},
+hdr:{t:"Email header check",d:"Detect spoofed or forged emails from their headers.",on:0,i:'<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h6M9 16h6"/>'},
+enc:{t:"Encrypt and decrypt",d:"Lock or unlock a private message with a password (AES-256).",on:0,i:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'},
+img:{t:"Photo privacy scrub",d:"Remove hidden GPS and camera details from photos.",on:0,i:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/>'},
+list:{t:"Security checklist",d:"Ten habits that stop most account takeovers.",on:0,i:'<rect x="3" y="3" width="18" height="18" rx="3"/><path d="m8 12 3 3 5-6"/>'}};
+const groups=[["Check your exposure",["leak","email"]],["Passwords",["crack","gen"]],["Spot scams",["link","hdr"]],["Protect yourself",["enc","img","list"]]];
+const home=$("#home"),view=$("#view"),panels=$("#panels");
+(function(){
+ const cv=document.createElement("canvas");cv.id="bg";cv.setAttribute("aria-hidden","true");document.body.prepend(cv);
+ const ctx=cv.getContext("2d"),reduce=matchMedia("(prefers-reduced-motion:reduce)").matches,dark=matchMedia("(prefers-color-scheme:dark)"),G=32;
+ let W=0,H=0,TH=0,tr=[],mx=-1,my=-1,sx=0,sy2=0,raf=0,C;
+ const setC=()=>{C=dark.matches?{line:"45,212,191",la:.14,pulse:"94,234,212",grid:"148,190,220",ga:.11,o1:"45,212,191",o2:"99,102,241",oa:1}:{line:"15,118,110",la:.17,pulse:"13,148,136",grid:"15,60,100",ga:.1,o1:"20,184,166",o2:"99,102,241",oa:.8}};setC();
+ dark.addEventListener&&dark.addEventListener("change",()=>{setC();if(reduce)draw(0)});
+ const rng=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+ function build(){const cols=Math.ceil(W/G),rows=Math.ceil(TH/G),r=rng(11),n=W<600?7:13;tr=[];
+  for(let k=0;k<n;k++){let cx=Math.floor(r()*cols),cy=Math.floor(r()*rows),h=r()<.5;const pts=[[cx*G,cy*G]],segs=3+Math.floor(r()*4);
+   for(let s=0;s<segs;s++){const len=2+Math.floor(r()*6),dir=r()<.5?-1:1;if(h)cx=Math.max(1,Math.min(cols-1,cx+dir*len));else cy=Math.max(0,Math.min(rows,cy+dir*len));pts.push([cx*G,cy*G]);h=!h}
+   let L=0;const cum=[0];for(let i=1;i<pts.length;i++){L+=Math.abs(pts[i][0]-pts[i-1][0])+Math.abs(pts[i][1]-pts[i-1][1]);cum.push(L)}
+   if(L<G*4)continue;tr.push({pts,cum,L,sp:36+r()*30,off:r()*L,w:r()<.3?1.5:1})}}
+ function size(){const d=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;TH=Math.round(H*1.25);cv.width=W*d;cv.height=H*d;cv.style.width=W+"px";cv.style.height=H+"px";ctx.setTransform(d,0,0,d,0,0);build()}
+ function at(t,s){s=((s%t.L)+t.L)%t.L;let i=1;while(i<t.cum.length-1&&t.cum[i]<s)i++;const a=t.pts[i-1],b=t.pts[i],f=(s-t.cum[i-1])/((t.cum[i]-t.cum[i-1])||1);return[a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f]}
+ function draw(now){
+  ctx.clearRect(0,0,W,H);const y=scrollY,T=reduce?0:now;
+  [[.15,.2,.55,C.o1,.15,.1],[.88,.75,.6,C.o2,.13,.07]].forEach(([fx,fy,fr,c,a,k],i)=>{const x=W*fx+Math.sin(T*.00012+i*2)*50,yy=H*fy+Math.cos(T*.0001+i)*40-((y*k)%H),r=Math.max(W,H)*fr,g=ctx.createRadialGradient(x,yy,0,x,yy,r);g.addColorStop(0,"rgba("+c+","+a*C.oa+")");g.addColorStop(1,"rgba("+c+",0)");ctx.fillStyle=g;ctx.fillRect(0,0,W,H)});
+  const go=(y*.25)%G;ctx.fillStyle="rgba("+C.grid+","+C.ga+")";for(let gy=-go;gy<H;gy+=G)for(let gx=0;gx<W+G;gx+=G)ctx.fillRect(gx-.75,gy-.75,1.5,1.5);
+  const oy=-((y*.28)%TH);
+  for(const o of [oy,oy+TH]){ctx.save();ctx.translate(0,o);
+   for(const t of tr){ctx.lineJoin="round";ctx.lineWidth=t.w;ctx.strokeStyle="rgba("+C.line+","+C.la+")";ctx.beginPath();t.pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.stroke();
+    for(const e of [t.pts[0],t.pts[t.pts.length-1]]){const br=.5+.5*Math.sin(T*.002+e[0]*.01);ctx.strokeStyle="rgba("+C.line+","+(.2+.18*br)+")";ctx.lineWidth=1;ctx.beginPath();ctx.arc(e[0],e[1],4.2,0,6.2832);ctx.stroke();ctx.fillStyle="rgba("+C.pulse+",.55)";ctx.beginPath();ctx.arc(e[0],e[1],1.6,0,6.2832);ctx.fill()}
+    const head=t.off+T*t.sp/1000;let prev=at(t,head);
+    for(let i=1;i<=12;i++){const q=at(t,head-i*6);ctx.strokeStyle="rgba("+C.pulse+","+(.85*(1-i/13))+")";ctx.lineWidth=2;if(Math.hypot(prev[0]-q[0],prev[1]-q[1])<=9){ctx.beginPath();ctx.moveTo(prev[0],prev[1]);ctx.lineTo(q[0],q[1]);ctx.stroke()}prev=q}
+    const h=at(t,head),g=ctx.createRadialGradient(h[0],h[1],0,h[0],h[1],11);g.addColorStop(0,"rgba("+C.pulse+",.8)");g.addColorStop(1,"rgba("+C.pulse+",0)");ctx.fillStyle=g;ctx.beginPath();ctx.arc(h[0],h[1],11,0,6.2832);ctx.fill();ctx.fillStyle="rgba("+C.pulse+",1)";ctx.beginPath();ctx.arc(h[0],h[1],2.2,0,6.2832);ctx.fill()}
+   ctx.restore()}
+  if(!reduce){const by=((T/12000)%1.3-.15)*H,g=ctx.createLinearGradient(0,by-90,0,by+90);g.addColorStop(0,"rgba("+C.o1+",0)");g.addColorStop(.5,"rgba("+C.o1+","+.07*C.oa+")");g.addColorStop(1,"rgba("+C.o1+",0)");ctx.fillStyle=g;ctx.fillRect(0,by-90,W,180)}
+  if(mx>=0){sx+=(mx-sx)*.08;sy2+=(my-sy2)*.08;const g=ctx.createRadialGradient(sx,sy2,0,sx,sy2,260);g.addColorStop(0,"rgba("+C.o1+","+.09*C.oa+")");g.addColorStop(1,"rgba("+C.o1+",0)");ctx.fillStyle=g;ctx.fillRect(0,0,W,H)}
+  if(!reduce&&!document.hidden)raf=requestAnimationFrame(draw)}
+ size();addEventListener("resize",()=>{size();if(reduce)draw(0)});
+ addEventListener("pointermove",e=>{if(e.pointerType==="mouse"){if(mx<0){sx=e.clientX;sy2=e.clientY}mx=e.clientX;my=e.clientY}},{passive:true});
+ document.addEventListener("pointerleave",()=>{mx=-1});
+ document.addEventListener("visibilitychange",()=>{if(!document.hidden&&!reduce){cancelAnimationFrame(raf);raf=requestAnimationFrame(draw)}});
+ if(reduce)draw(0);else raf=requestAnimationFrame(draw);
+})();
+home.addEventListener("pointermove",e=>{const c=e.target.closest(".card");if(!c)return;const r=c.getBoundingClientRect();c.style.setProperty("--cx",e.clientX-r.left+"px");c.style.setProperty("--cy",e.clientY-r.top+"px")},{passive:true});
+
+(function(){const topEl=$(".top"),prog=$("#prog");let tick=false;const upd=()=>{tick=false;const y=scrollY,m=document.documentElement.scrollHeight-innerHeight;topEl.style.setProperty("--sy",Math.min(y,400));document.documentElement.style.setProperty("--scroll",y);prog.style.setProperty("--p",m>0?Math.min(1,y/m):0)};
+ addEventListener("scroll",()=>{if(!tick){tick=true;requestAnimationFrame(upd)}},{passive:true});upd()})();
+const io=new IntersectionObserver(es=>{let k=0;es.filter(e=>e.isIntersecting).forEach(e=>{const n=e.target;io.unobserve(n);n.style.transitionDelay=(k++*80)+"ms";n.classList.add("in");setTimeout(()=>{n.classList.remove("rv","in");n.style.transitionDelay=""},1200)})},{threshold:.12,rootMargin:"0px 0px -6% 0px"});
+function reveal(){home.querySelectorAll(".card,.grp").forEach(n=>{n.classList.remove("in");n.classList.add("rv");io.observe(n)})}
+
+let ci=0;groups.forEach(([g,ids])=>{const grid=el("div","grid");ids.forEach(id=>{const m=meta[id],a=el("a","card");a.style.setProperty("--i",ci++);a.href="#"+id;a.innerHTML='<span class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+m.i+'</svg></span><span class="ct"><b></b><small></small><em></em></span>';a.querySelector("b").textContent=m.t;a.querySelector("small").textContent=m.d;a.querySelector("em").textContent=m.on?"Uses internet":"Works offline";grid.append(a)});home.append(el("h2","grp",g),grid)});
+tools.forEach(t=>{const s=el("section");s.id="s-"+t.id;s.hidden=true;s.innerHTML=t.html();panels.append(s);t.init()});
+function route(){const id=location.hash.slice(1),t=tools.find(x=>x.id===id);document.body.classList.toggle("in-tool",!!t);home.hidden=!!t;view.hidden=!t;panels.querySelectorAll("section").forEach(s=>s.hidden=!t||s.id!=="s-"+id);document.title=t?meta[id].t+" · JB Guard":"JB Guard · Security Toolkit";window.scrollTo(0,0);const cur=t?$("#s-"+id):home;cur.classList.remove("enter");void cur.offsetWidth;cur.classList.add("enter");if(!t)reveal()}
+window.addEventListener("hashchange",route);route();
+panels.addEventListener("click",e=>{const b=e.target.closest("[data-show]");if(!b)return;const i=document.getElementById(b.dataset.show),s=i.type==="password";i.type=s?"text":"password";b.textContent=s?"Hide":"Show"});
+</script>
+</body>
+</html>
